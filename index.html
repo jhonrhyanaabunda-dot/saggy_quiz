@@ -1,0 +1,2494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The SAGGY Score | A3 Brands</title>
+<meta name="description" content="Find out how visible your dealership actually is across SEO, AEO, and Generative AI search. 90 seconds. One score out of 100." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Lato:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #0B3D2E;
+    --green-deeper: #062318;
+    --green-darkest: #03130C;
+    --lime: #7CB342;
+    --lime-glow: #A4DC60;
+    --lime-dim: #4E7028;
+    --cream: #F5F1E8;
+    --white: #FFFFFF;
+    --gray-warm: #C7C1B3;
+    --gray-dim: #6B665C;
+    --red: #E25C3E;
+    --display: 'Sora', sans-serif;
+    --body: 'Lato', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    background: var(--green-darkest);
+  }
+  html, body {
+    color: var(--cream);
+    font-family: var(--body);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+  body {
+    background: transparent;
+  }
+
+  /* Full-page background video — only visible on the landing (URL) screen */
+  .bg-video {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -3;
+    pointer-events: none;
+    display: none;
+  }
+  body:has(#screen-landing.active) .bg-video {
+    display: block;
+  }
+
+  /* Dark scrim + subtle tint over the video for content readability */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 70% 10%, rgba(124, 179, 66, 0.08), transparent),
+      radial-gradient(ellipse 60% 80% at 20% 90%, rgba(11, 61, 46, 0.35), transparent),
+      linear-gradient(180deg, rgba(3, 19, 12, 0.55) 0%, rgba(6, 35, 24, 0.45) 50%, rgba(3, 19, 12, 0.6) 100%);
+    z-index: -2;
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 12% 22%, white, transparent),
+      radial-gradient(1px 1px at 78% 35%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1px 1px at 35% 72%, white, transparent),
+      radial-gradient(1px 1px at 64% 85%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1.5px 1.5px at 90% 15%, white, transparent),
+      radial-gradient(1px 1px at 8% 60%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 55% 18%, white, transparent),
+      radial-gradient(1px 1px at 25% 45%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 88% 65%, white, transparent),
+      radial-gradient(1px 1px at 48% 92%, rgba(255,255,255,0.5), transparent);
+    background-size: 100% 100%;
+    z-index: -1;
+    opacity: 0.6;
+    animation: drift 60s linear infinite;
+  }
+
+  @keyframes drift {
+    0%   { transform: translate(0, 0); }
+    100% { transform: translate(-2%, -1%); }
+  }
+
+  /* Top brand bar */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: 18px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 50;
+    background: transparent;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+  }
+  .logo img {
+    height: 64px;
+    width: auto;
+    display: block;
+  }
+  .topbar .step-indicator {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gray-warm);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+  .topbar .step-indicator .dot {
+    color: var(--lime);
+    margin: 0 8px;
+  }
+
+  /* Screen container */
+  .screen {
+    min-height: 100vh;
+    padding: 100px 32px 60px;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .screen.active {
+    display: block;
+    opacity: 1;
+  }
+
+  /* ============ LANDING ============ */
+  .landing-wrap {
+    max-width: 920px;
+    margin: 40px auto 0;
+    text-align: center;
+  }
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--lime);
+    padding: 8px 16px;
+    border: 1px solid rgba(124, 179, 66, 0.3);
+    border-radius: 999px;
+    background: rgba(124, 179, 66, 0.06);
+    margin-bottom: 32px;
+  }
+  .hero-headline {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(40px, 7vw, 84px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+  }
+  .hero-headline .saggy-word {
+    color: var(--lime);
+    position: relative;
+    display: inline-block;
+  }
+  .hero-headline .saggy-word::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    bottom: -8px;
+    height: 4px;
+    background: var(--lime);
+    border-radius: 2px;
+    opacity: 0.5;
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: var(--gray-warm);
+    max-width: 620px;
+    margin: 0 auto 48px;
+    line-height: 1.55;
+  }
+  .url-form {
+    max-width: 560px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 8px;
+    display: flex;
+    gap: 8px;
+    transition: border-color 0.2s;
+  }
+  .url-form:focus-within {
+    border-color: var(--lime);
+    box-shadow: 0 0 0 4px rgba(124, 179, 66, 0.15);
+  }
+  .url-form input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 16px 18px;
+    color: var(--white);
+    font-family: var(--body);
+    font-size: 16px;
+  }
+  .url-form input::placeholder { color: var(--gray-dim); }
+  .url-form button {
+    background: var(--lime);
+    color: var(--green-darkest);
+    border: none;
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+    white-space: nowrap;
+  }
+  .url-form button:hover {
+    background: var(--lime-glow);
+    transform: translateY(-1px);
+  }
+  .url-error {
+    color: var(--red);
+    font-size: 14px;
+    margin-top: 14px;
+    min-height: 20px;
+  }
+  .competitor-toggle {
+    max-width: 560px;
+    margin: 18px auto 0;
+    text-align: left;
+  }
+  .vs-link {
+    background: transparent;
+    border: none;
+    color: var(--lime);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 8px 0;
+    transition: color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .vs-link:hover { color: var(--lime-glow); }
+  .vs-plus {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px; height: 18px;
+    border: 1px solid rgba(124, 179, 66, 0.4);
+    border-radius: 50%;
+    font-size: 13px;
+    line-height: 1;
+    transition: transform 0.18s;
+  }
+  .vs-link[aria-expanded="true"] .vs-plus { transform: rotate(45deg); }
+  .vs-input {
+    margin-top: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 8px;
+  }
+  .vs-input input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 14px 16px;
+    color: var(--white);
+    font-family: var(--body);
+    font-size: 15px;
+  }
+  .vs-input input::placeholder { color: var(--gray-dim); }
+  .vs-fineprint {
+    padding: 4px 16px 8px;
+    font-size: 12px;
+    color: var(--gray-dim);
+    font-family: var(--mono);
+    letter-spacing: 0.05em;
+  }
+  .landing-meta {
+    margin-top: 60px;
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    text-align: left;
+  }
+  .meta-item .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gray-dim);
+    margin-bottom: 6px;
+  }
+  .meta-item .val {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--cream);
+  }
+  .meta-item .val .num { color: var(--lime); }
+
+  /* ============ QUIZ ============ */
+  .quiz-layout {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .question-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 48px;
+    min-height: 480px;
+  }
+  .q-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .q-counter {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray-warm);
+  }
+  .q-counter strong { color: var(--lime); }
+  .q-section {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray-dim);
+    padding: 6px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+  }
+
+  .q-text {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 36px;
+    color: var(--white);
+  }
+
+  .answers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .answer-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 18px 22px;
+    text-align: left;
+    color: var(--cream);
+    font-family: var(--body);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+  }
+  .answer-btn:hover {
+    border-color: var(--lime);
+    background: rgba(124, 179, 66, 0.07);
+    transform: translateX(4px);
+  }
+  .answer-btn.selected {
+    border-color: var(--lime);
+    background: rgba(124, 179, 66, 0.12);
+  }
+  .answer-letter {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(124, 179, 66, 0.12);
+    color: var(--lime);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+    border: 1px solid rgba(124, 179, 66, 0.3);
+  }
+  .answer-btn.selected .answer-letter {
+    background: var(--lime);
+    color: var(--green-darkest);
+    border-color: var(--lime);
+  }
+
+  /* Saggy panel */
+  .saggy-panel {
+    position: sticky;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .speech-bubble {
+    background: linear-gradient(180deg, var(--white) 0%, var(--cream) 100%);
+    color: var(--green-darkest);
+    border-radius: 20px;
+    padding: 22px 26px 18px 30px;
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.55;
+    position: relative;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      0 12px 32px rgba(0, 0, 0, 0.32),
+      0 2px 6px rgba(0, 0, 0, 0.14);
+    min-height: 72px;
+    cursor: default;
+    transition: box-shadow 0.3s ease;
+  }
+  /* Big lime quote mark accent */
+  .speech-bubble::before {
+    content: '\201C';
+    position: absolute;
+    top: -8px;
+    left: 14px;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--lime);
+    opacity: 0.9;
+    letter-spacing: -0.05em;
+    pointer-events: none;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  /* Tail */
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 60px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid var(--cream);
+    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.15));
+  }
+  .bubble-text {
+    display: block;
+    min-height: 1.55em;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .bubble-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--lime-dim);
+    vertical-align: -2px;
+    margin-left: 2px;
+    animation: bubble-blink 0.95s steps(1) infinite;
+  }
+  @keyframes bubble-blink {
+    50% { opacity: 0; }
+  }
+  .bubble-attribution {
+    display: block;
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--lime-dim);
+    opacity: 0;
+    transition: opacity 0.4s ease-out 0.15s;
+  }
+  /* Entry animation — re-applied each time the bubble updates */
+  .speech-bubble.entering {
+    animation: bubble-enter 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes bubble-enter {
+    0%   { opacity: 0; transform: translateY(-6px) scale(0.96); }
+    100% { opacity: 1; transform: translateY(0)     scale(1);    }
+  }
+  /* Once typing finishes, hide the cursor, reveal attribution, gentle pulse */
+  .speech-bubble.done .bubble-cursor { display: none; }
+  .speech-bubble.done .bubble-attribution { opacity: 0.7; }
+  .speech-bubble.done {
+    animation: bubble-idle 4.5s ease-in-out infinite;
+  }
+  @keyframes bubble-idle {
+    0%, 100% {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 12px 32px rgba(0, 0, 0, 0.32),
+        0 2px 6px rgba(0, 0, 0, 0.14);
+    }
+    50% {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 14px 36px rgba(0, 0, 0, 0.36),
+        0 0 0 1px rgba(124, 179, 66, 0.18),
+        0 4px 14px rgba(124, 179, 66, 0.15);
+    }
+  }
+  .saggy-figure {
+    width: 100%;
+    aspect-ratio: 1;
+    background: radial-gradient(circle at 50% 60%, rgba(124, 179, 66, 0.18), transparent 60%);
+    border-radius: 24px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+  }
+  .saggy-figure svg { width: 80%; height: auto; }
+  .saggy-name {
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-dim);
+  }
+  /* Audio toggle below mascot */
+  .audio-toggle {
+    margin: 4px auto 0;
+    display: inline-flex;
+    align-self: center;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    color: var(--gray-warm);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .audio-toggle:hover {
+    border-color: rgba(124, 179, 66, 0.4);
+    color: var(--cream);
+  }
+  .audio-toggle[aria-pressed="true"] {
+    border-color: var(--lime);
+    color: var(--lime);
+    background: rgba(124, 179, 66, 0.08);
+  }
+  .audio-toggle .audio-waves { opacity: 0.4; transition: opacity 0.2s; }
+  .audio-toggle[aria-pressed="true"] .audio-waves { opacity: 1; }
+
+  /* Algorithm scan progress */
+  .scan-tracker {
+    background: rgba(3, 19, 12, 0.6);
+    border: 1px solid rgba(124, 179, 66, 0.2);
+    border-radius: 16px;
+    padding: 20px 22px;
+    backdrop-filter: blur(4px);
+  }
+  .scan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .scan-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray-warm);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .scan-label .pulse-dot {
+    width: 8px; height: 8px;
+    background: var(--lime);
+    border-radius: 50%;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(124, 179, 66, 0.6); }
+    50%      { opacity: 0.6; box-shadow: 0 0 0 6px rgba(124, 179, 66, 0); }
+  }
+  .scan-pct {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--lime);
+  }
+  .scan-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .scan-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--lime-dim), var(--lime));
+    width: 0;
+    transition: width 0.4s ease;
+    border-radius: 3px;
+  }
+  .scan-status {
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gray-dim);
+  }
+  .scan-tracker.complete .pulse-dot {
+    animation: none;
+    background: var(--lime-glow);
+  }
+  .scan-tracker.complete .scan-pct::after {
+    content: ' ✓';
+    color: var(--lime-glow);
+  }
+
+  /* ============ LEAD CAPTURE ============ */
+  .lead-wrap {
+    max-width: 560px;
+    margin: 40px auto 0;
+  }
+  .lead-eyebrow {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .lead-headline {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .lead-sub {
+    text-align: center;
+    color: var(--gray-warm);
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+  .lead-form {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .field-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--gray-warm);
+    margin-bottom: 6px;
+  }
+  .lead-form input {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 14px 16px;
+    color: var(--white);
+    font-family: var(--body);
+    font-size: 15px;
+    width: 100%;
+    transition: border-color 0.18s;
+  }
+  .lead-form input:focus {
+    outline: none;
+    border-color: var(--lime);
+  }
+  .lead-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .reveal-btn {
+    background: var(--lime);
+    color: var(--green-darkest);
+    border: none;
+    border-radius: 12px;
+    padding: 18px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.15s, transform 0.15s;
+    letter-spacing: 0.02em;
+  }
+  .reveal-btn:hover {
+    background: var(--lime-glow);
+    transform: translateY(-1px);
+  }
+  .lead-fineprint {
+    text-align: center;
+    font-size: 12px;
+    color: var(--gray-dim);
+    margin-top: 16px;
+  }
+  /* Honeypot — visually hidden but still in the DOM so naive bots fill it */
+  .hp-field {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+  }
+  .hp-field input { pointer-events: none; }
+
+  /* ============ RESULT ============ */
+  .result-wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .band-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .band-name {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--lime);
+    padding: 8px 18px;
+    border: 1px solid rgba(124, 179, 66, 0.4);
+    border-radius: 999px;
+    margin-bottom: 28px;
+    background: rgba(124, 179, 66, 0.08);
+  }
+  .reveal-callout {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(124, 179, 66, 0.25);
+    border-radius: 24px;
+    padding: 40px 48px;
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .reveal-callout::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(124, 179, 66, 0.15), transparent 60%);
+    z-index: 0;
+  }
+  .reveal-callout > * { position: relative; z-index: 1; }
+  .saggy-mini {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+  }
+  .reveal-text {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(22px, 3vw, 30px);
+    line-height: 1.35;
+    color: var(--cream);
+    max-width: 720px;
+    margin: 0 auto;
+    letter-spacing: -0.01em;
+  }
+  .reveal-text .quote-mark {
+    color: var(--lime);
+    font-size: 1.4em;
+    line-height: 0;
+    vertical-align: -0.2em;
+  }
+
+  .score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.3fr;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .score-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .score-card.total {
+    background: linear-gradient(135deg, rgba(124, 179, 66, 0.15), rgba(124, 179, 66, 0.03));
+    border-color: rgba(124, 179, 66, 0.4);
+  }
+  .score-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--gray-warm);
+    margin-bottom: 16px;
+  }
+  .score-card.total .score-label { color: var(--lime); }
+  .score-value {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 72px;
+    line-height: 1;
+    color: var(--white);
+    letter-spacing: -0.04em;
+  }
+  .score-card.total .score-value { color: var(--lime-glow); font-size: 96px; }
+  .score-total {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 22px;
+    color: var(--gray-dim);
+    margin-left: 6px;
+  }
+  .score-card.total .score-total { color: var(--lime); }
+  .score-bar {
+    margin-top: 18px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .score-bar-fill {
+    height: 100%;
+    background: var(--lime);
+    border-radius: 2px;
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .pillar-breakdown {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 40px;
+  }
+  .pillar-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--gray-warm);
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .vs-legend {
+    display: inline-flex;
+    gap: 16px;
+    font-size: 10.5px;
+    letter-spacing: 0.15em;
+  }
+  .vs-key {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--cream);
+  }
+  .vs-swatch {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+  .vs-swatch--you { background: var(--lime); }
+  .vs-swatch--vs  { background: var(--gray-warm); }
+  .pillar-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 88px;
+    gap: 16px;
+    align-items: center;
+    padding: 10px 0;
+  }
+  .pillar-bar-stack { display: flex; flex-direction: column; gap: 4px; }
+  .pillar-bar--vs .pillar-bar-fill--vs {
+    background: linear-gradient(90deg, rgba(199, 193, 179, 0.6), var(--gray-warm));
+  }
+  .pillar-score-vs {
+    display: block;
+    margin-top: 2px;
+    color: var(--gray-warm);
+    font-size: 11px;
+  }
+  .vs-summary {
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: rgba(124, 179, 66, 0.06);
+    border: 1px solid rgba(124, 179, 66, 0.2);
+    border-radius: 12px;
+    font-family: var(--body);
+    font-size: 14px;
+    color: var(--cream);
+    line-height: 1.5;
+  }
+  .vs-summary b { color: var(--lime); font-weight: 700; }
+  .pillar-row + .pillar-row { border-top: 1px solid rgba(255,255,255,0.04); }
+  .pillar-name {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--cream);
+  }
+  .pillar-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .pillar-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--lime-dim), var(--lime));
+    border-radius: 3px;
+    width: 0;
+    transition: width 1.4s cubic-bezier(0.25, 1, 0.5, 1) 0.3s;
+  }
+  .pillar-score {
+    font-family: var(--mono);
+    font-size: 13px;
+    text-align: right;
+    color: var(--lime);
+  }
+
+  /* Personalized fixes panel */
+  .fixes-panel {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(124, 179, 66, 0.18);
+    border-radius: 20px;
+    padding: 32px 32px 28px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .fixes-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 0% 0%, rgba(124, 179, 66, 0.08), transparent 60%);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .fixes-header { position: relative; z-index: 1; margin-bottom: 22px; }
+  .fixes-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 8px;
+  }
+  .fixes-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--white);
+    letter-spacing: -0.01em;
+  }
+  .fixes-list {
+    list-style: none;
+    counter-reset: fix;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .fix-item {
+    counter-increment: fix;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 16px;
+    padding: 18px 20px;
+    background: rgba(3, 19, 12, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    transition: border-color 0.18s, transform 0.18s;
+  }
+  .fix-item:hover {
+    border-color: rgba(124, 179, 66, 0.4);
+    transform: translateX(2px);
+  }
+  .fix-item::before {
+    content: counter(fix);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(124, 179, 66, 0.14);
+    color: var(--lime);
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(124, 179, 66, 0.3);
+    align-self: start;
+  }
+  .fix-topic {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray-warm);
+    margin-bottom: 6px;
+  }
+  .fix-said {
+    font-family: var(--body);
+    font-size: 13px;
+    color: var(--gray-dim);
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+  .fix-said b { color: var(--cream); font-style: normal; font-weight: 600; }
+  .fix-body {
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--cream);
+  }
+
+  .cta-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 14px;
+  }
+  .cta-primary, .cta-secondary {
+    border-radius: 14px;
+    padding: 20px 28px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    text-align: center;
+    border: none;
+    transition: all 0.18s;
+    letter-spacing: 0.01em;
+  }
+  .cta-primary {
+    background: var(--lime);
+    color: var(--green-darkest);
+  }
+  .cta-primary:hover {
+    background: var(--lime-glow);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(124, 179, 66, 0.3);
+  }
+  .cta-secondary {
+    background: transparent;
+    color: var(--cream);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .cta-secondary:hover {
+    border-color: var(--lime);
+    color: var(--lime);
+  }
+
+  /* Mobile */
+  @media (max-width: 880px) {
+    .quiz-layout { grid-template-columns: 1fr; gap: 24px; }
+    .saggy-panel { position: static; order: -1; }
+    .saggy-figure { aspect-ratio: auto; height: 160px; }
+    .saggy-figure svg { width: auto; height: 100%; }
+    .speech-bubble::after { left: 50%; transform: translateX(-50%); }
+    .question-card { padding: 32px 24px; min-height: auto; }
+    .q-text { font-size: 24px; }
+    .lead-row { grid-template-columns: 1fr; }
+    .score-grid { grid-template-columns: 1fr; }
+    .cta-row { grid-template-columns: 1fr; }
+    .topbar { padding: 14px 20px; }
+    .screen { padding: 80px 20px 40px; }
+    .landing-meta { gap: 24px; }
+  }
+
+  /* ============ SAGGY MASCOT (real character art) ============ */
+  .saggy-figure {
+    position: relative;
+    overflow: visible;
+    background: none;
+    aspect-ratio: auto;
+    padding: 20px 0 10px;
+  }
+  /* Lunar glow disc underneath */
+  .saggy-figure::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 30px;
+    background: radial-gradient(ellipse at center,
+      rgba(124, 179, 66, 0.35) 0%,
+      rgba(124, 179, 66, 0.12) 40%,
+      transparent 70%);
+    border-radius: 50%;
+    filter: blur(8px);
+    animation: lunar-pulse 3.8s ease-in-out infinite;
+    z-index: 0;
+  }
+  @keyframes lunar-pulse {
+    0%, 100% { opacity: 0.55; transform: translateX(-50%) scale(0.92); }
+    50%      { opacity: 1;    transform: translateX(-50%) scale(1.08); }
+  }
+  /* Twinkle stars around saggy */
+  .saggy-figure::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(2px 2px at 15% 30%, rgba(164, 220, 96, 0.9), transparent 60%),
+      radial-gradient(1.5px 1.5px at 85% 20%, rgba(255, 255, 255, 0.7), transparent 60%),
+      radial-gradient(2px 2px at 92% 60%, rgba(164, 220, 96, 0.8), transparent 60%),
+      radial-gradient(1px 1px at 8% 75%, rgba(255, 255, 255, 0.6), transparent 60%),
+      radial-gradient(1.5px 1.5px at 70% 8%, rgba(255, 255, 255, 0.8), transparent 60%);
+    animation: twinkle 2.6s ease-in-out infinite;
+    z-index: 2;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50%      { opacity: 1;   }
+  }
+
+  .saggy-img {
+    display: block;
+    width: 78%;
+    max-width: 280px;
+    height: auto;
+    margin: 0 auto;
+    filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.45));
+    animation:
+      saggy-bob 3.6s ease-in-out infinite,
+      saggy-sway 7s ease-in-out infinite;
+    transform-origin: 50% 100%;
+    transition: transform 0.3s;
+  }
+  @keyframes saggy-bob {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -10px; }
+  }
+  @keyframes saggy-sway {
+    0%, 100% { rotate: -1.5deg; }
+    50%      { rotate: 1.5deg; }
+  }
+  /* One-shot reaction on question change */
+  .saggy-img.react {
+    animation:
+      saggy-react 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 1,
+      saggy-bob 3.6s ease-in-out infinite 0.6s,
+      saggy-sway 7s ease-in-out infinite 0.6s;
+  }
+  @keyframes saggy-react {
+    0%   { translate: 0 0;     scale: 1;    rotate: -1.5deg; }
+    30%  { translate: 0 -18px; scale: 1.05; rotate: 4deg; }
+    60%  { translate: 0 -8px;  scale: 0.98; rotate: -3deg; }
+    100% { translate: 0 0;     scale: 1;    rotate: -1.5deg; }
+  }
+  /* Result page mini avatar — orbital ring + bob */
+  .saggy-mini-wrap {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 24px;
+  }
+  .saggy-mini-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1.5px dashed rgba(124, 179, 66, 0.5);
+    animation: orbit 18s linear infinite;
+  }
+  .saggy-mini-wrap::after {
+    content: '';
+    position: absolute;
+    inset: -14px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124, 179, 66, 0.25), transparent 65%);
+    animation: lunar-pulse 3.8s ease-in-out infinite;
+  }
+  @keyframes orbit {
+    0%   { rotate: 0deg; }
+    100% { rotate: 360deg; }
+  }
+  .saggy-mini-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    object-fit: cover;
+    border: 2px solid rgba(124, 179, 66, 0.5);
+    background: rgba(11, 61, 46, 0.4);
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
+    animation: orbit 15s linear infinite;
+  }
+
+  /* Adjust speech bubble pointer position to align with mascot center */
+  .speech-bubble::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+</style>
+</head>
+<body>
+
+<video class="bg-video" autoplay loop muted playsinline aria-hidden="true" src="background.mp4"></video>
+
+<header class="topbar">
+  <a class="logo" href="/" aria-label="A3 Brands"><img src="a3brands-1.png" alt="A3 Brands" /></a>
+  <div class="step-indicator" id="stepIndicator"></div>
+</header>
+
+<!-- ============ SCREEN 1: LANDING ============ -->
+<section class="screen active" id="screen-landing">
+  <div class="landing-wrap">
+    <div class="eyebrow">GALAXY · Visibility Diagnostic</div>
+    <h1 class="hero-headline">Get your <span class="saggy-word">SAGGY</span> Score.</h1>
+    <p class="hero-sub">Find out how visible your dealership actually is across SEO, AEO, and Generative AI search. 90 seconds. One score out of 100. No fluff.</p>
+    <div class="url-form">
+      <input type="url" id="urlInput" placeholder="https://yourdealership.com" autocomplete="url" />
+      <button id="startBtn">Start the Scan →</button>
+    </div>
+    <div class="url-error" id="urlError"></div>
+
+    <div class="competitor-toggle">
+      <button type="button" class="vs-link" id="vsToggle" aria-expanded="false">
+        <span class="vs-plus">+</span> Compare against a competitor (optional)
+      </button>
+      <div class="vs-input" id="vsInputWrap" hidden>
+        <input type="url" id="competitorInput" placeholder="https://competitor-dealership.com" autocomplete="off" />
+        <div class="vs-fineprint">We'll scan both sites and show you a side-by-side score. Takes the same 90 seconds.</div>
+      </div>
+    </div>
+    <div class="landing-meta">
+      <div class="meta-item">
+        <div class="label">Scan Pillars</div>
+        <div class="val">SEO · AEO · GEO</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Questions</div>
+        <div class="val"><span class="num">10</span> in Saggy's voice</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Time</div>
+        <div class="val">Under <span class="num">90</span> seconds</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCREEN 2: QUIZ ============ -->
+<section class="screen" id="screen-quiz">
+  <div class="quiz-layout">
+    <div class="question-card">
+      <div class="q-meta">
+        <div class="q-counter">Question <strong id="qNum">1</strong> of 10</div>
+        <div class="q-section" id="qSection">Growth Strategy</div>
+      </div>
+      <h2 class="q-text" id="qText">Loading question…</h2>
+      <div class="answers" id="answersWrap"></div>
+    </div>
+
+    <aside class="saggy-panel">
+      <div class="speech-bubble" id="speechBubble">Hold on, dialing in...</div>
+      <div class="saggy-figure">
+        <img class="saggy-img" id="saggyImg" src="saggy_mascot_try.webp" alt="Saggy, A3 Brands mascot" />
+      </div>
+      <div class="saggy-name">SAGGY · Mission Lead</div>
+      <button type="button" class="audio-toggle" id="audioToggle" aria-pressed="false" aria-label="Toggle Saggy voice-over">
+        <span class="audio-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M11 5L6 9H2v6h4l5 4V5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+            <path class="audio-waves" d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </span>
+        <span class="audio-label">Saggy speaks</span>
+      </button>
+
+      <div class="scan-tracker" id="scanTracker">
+        <div class="scan-header">
+          <div class="scan-label"><span class="pulse-dot"></span>Site Scan</div>
+          <div class="scan-pct" id="scanPct">0%</div>
+        </div>
+        <div class="scan-bar"><div class="scan-bar-fill" id="scanFill"></div></div>
+        <div class="scan-status" id="scanStatus">Initializing crawler…</div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ SCREEN 3: LEAD CAPTURE ============ -->
+<section class="screen" id="screen-leadcap">
+  <div class="lead-wrap">
+    <div class="lead-eyebrow">
+      <div class="eyebrow">Scan Complete · Score Ready</div>
+    </div>
+    <h2 class="lead-headline">Your score is locked in.</h2>
+    <p class="lead-sub">Tell us where to send it. We'll email the breakdown plus the action plan to fix the gaps.</p>
+    <form class="lead-form" id="leadForm" autocomplete="on">
+      <!-- Honeypot: invisible to humans, bots fill it. Submissions with a value are dropped before the webhook. -->
+      <div class="hp-field" aria-hidden="true">
+        <label for="company_website">Company Website (leave blank)</label>
+        <input type="text" id="leadHoneypot" name="company_website" tabindex="-1" autocomplete="off" />
+      </div>
+      <div>
+        <div class="field-label">Your Name</div>
+        <input type="text" id="leadName" placeholder="Jane Smith" required />
+      </div>
+      <div>
+        <div class="field-label">Dealership</div>
+        <input type="text" id="leadDealer" placeholder="Smith Auto Group" required />
+      </div>
+      <div class="lead-row">
+        <div>
+          <div class="field-label">Email</div>
+          <input type="email" id="leadEmail" placeholder="jane@dealership.com" required />
+        </div>
+        <div>
+          <div class="field-label">Phone</div>
+          <input type="tel" id="leadPhone" placeholder="(555) 555-5555" required />
+        </div>
+      </div>
+      <button type="submit" class="reveal-btn">Reveal My SAGGY Score →</button>
+      <div class="lead-fineprint">We'll never share your info. One follow-up email, then you're in control.</div>
+    </form>
+  </div>
+</section>
+
+<!-- ============ SCREEN 4: RESULT ============ -->
+<section class="screen" id="screen-result">
+  <div class="result-wrap">
+    <div class="band-header">
+      <div class="band-name" id="bandName">— —</div>
+    </div>
+
+    <div class="reveal-callout">
+      <div class="saggy-mini-wrap"><img class="saggy-mini-img" src="head%20saggy.png" alt="Saggy" /></div>
+      <p class="reveal-text" id="revealText">
+        <span class="quote-mark">"</span><span id="revealLine"></span><span class="quote-mark">"</span>
+      </p>
+    </div>
+
+    <div class="score-grid">
+      <div class="score-card">
+        <div class="score-label">Algorithm Scan</div>
+        <div><span class="score-value" id="algoVal">0</span><span class="score-total">/60</span></div>
+        <div class="score-bar"><div class="score-bar-fill" id="algoBarFill"></div></div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Quiz Score</div>
+        <div><span class="score-value" id="quizVal">0</span><span class="score-total">/40</span></div>
+        <div class="score-bar"><div class="score-bar-fill" id="quizBarFill"></div></div>
+      </div>
+      <div class="score-card total">
+        <div class="score-label">SAGGY Score</div>
+        <div><span class="score-value" id="totalVal">0</span><span class="score-total">/100</span></div>
+        <div class="score-bar"><div class="score-bar-fill" id="totalBarFill"></div></div>
+      </div>
+    </div>
+
+    <div class="pillar-breakdown" id="pillarBreakdown">
+      <div class="pillar-title">
+        <span>Algorithm Pillar Breakdown</span>
+        <span class="vs-legend" id="vsLegend" hidden>
+          <span class="vs-key"><span class="vs-swatch vs-swatch--you"></span>You</span>
+          <span class="vs-key"><span class="vs-swatch vs-swatch--vs"></span><span id="vsLegendHost">Competitor</span></span>
+        </span>
+      </div>
+      <div class="pillar-row">
+        <div class="pillar-name">SEO</div>
+        <div class="pillar-bar-stack">
+          <div class="pillar-bar"><div class="pillar-bar-fill" id="seoFill"></div></div>
+          <div class="pillar-bar pillar-bar--vs" id="seoVsBarWrap" hidden><div class="pillar-bar-fill pillar-bar-fill--vs" id="seoVsFill"></div></div>
+        </div>
+        <div class="pillar-score">
+          <span id="seoVal">0</span>/20
+          <span class="pillar-score-vs" id="seoVsScore" hidden><span id="seoVsVal">0</span>/20</span>
+        </div>
+      </div>
+      <div class="pillar-row">
+        <div class="pillar-name">AEO</div>
+        <div class="pillar-bar-stack">
+          <div class="pillar-bar"><div class="pillar-bar-fill" id="aeoFill"></div></div>
+          <div class="pillar-bar pillar-bar--vs" id="aeoVsBarWrap" hidden><div class="pillar-bar-fill pillar-bar-fill--vs" id="aeoVsFill"></div></div>
+        </div>
+        <div class="pillar-score">
+          <span id="aeoVal">0</span>/20
+          <span class="pillar-score-vs" id="aeoVsScore" hidden><span id="aeoVsVal">0</span>/20</span>
+        </div>
+      </div>
+      <div class="pillar-row">
+        <div class="pillar-name">GEO</div>
+        <div class="pillar-bar-stack">
+          <div class="pillar-bar"><div class="pillar-bar-fill" id="geoFill"></div></div>
+          <div class="pillar-bar pillar-bar--vs" id="geoVsBarWrap" hidden><div class="pillar-bar-fill pillar-bar-fill--vs" id="geoVsFill"></div></div>
+        </div>
+        <div class="pillar-score">
+          <span id="geoVal">0</span>/20
+          <span class="pillar-score-vs" id="geoVsScore" hidden><span id="geoVsVal">0</span>/20</span>
+        </div>
+      </div>
+      <div class="vs-summary" id="vsSummary" hidden></div>
+    </div>
+
+    <div class="fixes-panel" id="fixesPanel">
+      <div class="fixes-header">
+        <div class="fixes-eyebrow">What I'd Fix First</div>
+        <div class="fixes-title" id="fixesTitle">Your Top 3 Gaps</div>
+      </div>
+      <ol class="fixes-list" id="fixesList"></ol>
+    </div>
+
+    <div class="cta-row">
+      <button class="cta-primary" id="ctaBook">Book My Strategy Call →</button>
+      <button class="cta-secondary" id="ctaEmail">Email My Score</button>
+    </div>
+  </div>
+</section>
+
+<script>
+// ============ QUIZ DATA ============
+const QUESTIONS = [
+  {
+    section: 'Growth Strategy',
+    topic: 'AI Search Readiness',
+    saggy: "Alright, real talk. Half your shoppers are asking ChatGPT, Gemini, and Perplexity where to buy their next ride. The question is whether your team knows that yet.",
+    q: "How dialed in is your team on AI search?",
+    answers: [
+      { letter: 'A', text: "Dialed in. We track it and we're working on it", pts: 4 },
+      { letter: 'B', text: "We've talked about it. Haven't moved on it",     pts: 3 },
+      { letter: 'C', text: "Heard of it. Not a priority right now",          pts: 1 },
+      { letter: 'D', text: "First I'm hearing about it",                     pts: 0 },
+    ],
+    fix: "Run a 30-minute AI search test: ask ChatGPT, Gemini, and Perplexity 'best [your make] dealer near [your city]' and see if you show up. The gap between what's said about you and what isn't is your roadmap.",
+  },
+  {
+    section: 'Growth Strategy',
+    topic: 'Digital Strategy',
+    saggy: "Every dealer tells me they 'do SEO.' What I want to know is whether there's an actual plan, or whether somebody just checks a box once a quarter.",
+    q: "Which one sounds most like your store right now?",
+    answers: [
+      { letter: 'A', text: "We've got a real strategy across SEO, AEO, and AI search with goals attached", pts: 4 },
+      { letter: 'B', text: "We do traditional SEO. AEO and AI search aren't on the plan yet",              pts: 3 },
+      { letter: 'C', text: "Our website provider says they handle it. We don't see a strategy",            pts: 1 },
+      { letter: 'D', text: "No real plan in place",                                                        pts: 0 },
+    ],
+    fix: "Write a 90-day plan across SEO, AEO, and GEO with measurable targets — rankings, AI mentions, organic leads. If it's not on paper with a date attached, your provider is steering the ship, not you.",
+  },
+  {
+    section: 'Growth Strategy',
+    topic: 'Vendor Performance',
+    saggy: "Be honest with me. I'm not going to tell anybody.",
+    q: "How are your current digital partners actually performing?",
+    answers: [
+      { letter: 'A', text: "Crushing it. We see the growth in the numbers",        pts: 4 },
+      { letter: 'B', text: "Mixed. Some wins, some misses",                         pts: 2 },
+      { letter: 'C', text: "Not great. We're paying for results we're not seeing",  pts: 1 },
+      { letter: 'D', text: "No provider in the picture right now",                  pts: 0 },
+    ],
+    fix: "Put your provider on a 60-day review: CPL, attribution, close rate by source. If they can't show real movement in numbers — not impressions, not 'visibility' — they're a line item, not a partner.",
+  },
+  {
+    section: 'Growth Strategy',
+    topic: '12-Month Priority',
+    saggy: "If we're going to plant the flag somewhere this year, where's it going?",
+    q: "What's the number one priority for your store over the next 12 months?",
+    answers: [
+      { letter: 'A', text: "More organic and AI-driven leads",                  pts: 4 },
+      { letter: 'B', text: "Convert more of the traffic we already have",        pts: 3 },
+      { letter: 'C', text: "Make our paid spend work harder",                    pts: 2 },
+      { letter: 'D', text: "Haven't locked in a priority yet",                   pts: 0 },
+    ],
+    fix: "Pick ONE priority, write it on the wall, measure it weekly. Spreading focus across SEO, paid, AEO, and conversion at once means none of them move. Start with the biggest leak.",
+  },
+  {
+    section: 'Growth Strategy',
+    topic: 'Competitive Intelligence',
+    saggy: "There's a rooftop down the road eating your lunch in Google and AI search right now. Question is whether you know which one.",
+    q: "Do you know which competing rooftops are out-ranking you in your trade area?",
+    answers: [
+      { letter: 'A', text: "Yeah, we watch the leaderboard",        pts: 4 },
+      { letter: 'B', text: "Got a rough idea, don't track it closely", pts: 2 },
+      { letter: 'C', text: "No, but I want to know",                   pts: 1 },
+      { letter: 'D', text: "Never looked into it",                     pts: 0 },
+    ],
+    fix: "Pick 5 rooftops in your trade area and 10 high-intent keywords. Track where you sit in Google AND in AI search every month. The gap between you and #1 IS the playbook.",
+  },
+  {
+    section: 'Yield & ROI',
+    topic: 'Lead Attribution',
+    saggy: "When a lead pops into the CRM, can you actually tell where it came from? Because if you can't, you're flying without instruments.",
+    q: "How clean is your lead attribution?",
+    answers: [
+      { letter: 'A', text: "Clean. Channel and campaign, every time",      pts: 4 },
+      { letter: 'B', text: "Mostly clean. Some leads slip through unsourced", pts: 3 },
+      { letter: 'C', text: "We see total leads. The source is a mystery",   pts: 1 },
+      { letter: 'D', text: "No attribution at all",                          pts: 0 },
+    ],
+    fix: "Wire every form, chat, and call to UTM-aware tracking and dump the source into your CRM as a required field. If a lead lands without a source tag, it shouldn't enter the pipeline.",
+  },
+  {
+    section: 'Yield & ROI',
+    topic: 'GA4 Configuration',
+    saggy: "GA4 is the dashboard. If it's not wired up right, every report you read is fiction.",
+    q: "Is your GA4 set up properly with conversions tied to your forms, chats, and calls?",
+    answers: [
+      { letter: 'A', text: "Wired up tight, and we actually use it", pts: 4 },
+      { letter: 'B', text: "It's set up. We don't really look at it", pts: 2 },
+      { letter: 'C', text: "It's there. Not sure if it's right",       pts: 1 },
+      { letter: 'D', text: "We don't run GA4",                         pts: 0 },
+    ],
+    fix: "Audit GA4 this week. Confirm form submits, CallRail (or equivalent) calls, and chat fires are wired as conversion events. No clean GA4, no honest performance call — fix this before any other digital spend.",
+  },
+  {
+    section: 'Yield & ROI',
+    topic: 'Cost Per Lead',
+    saggy: "Blended CPL is a nice round number that hides everything. The real story is what each channel actually costs you per lead.",
+    q: "Do you know your cost per lead by channel, not just the blended number?",
+    answers: [
+      { letter: 'A', text: "By channel, and we review it every month",            pts: 4 },
+      { letter: 'B', text: "We know the blended number. Channel breakdown is fuzzy", pts: 2 },
+      { letter: 'C', text: "We've got rough estimates",                              pts: 1 },
+      { letter: 'D', text: "Not tracking CPL",                                       pts: 0 },
+    ],
+    fix: "Break out CPL by channel — organic, paid search, social, third-party — every month. Blended CPL hides which channels bleed cash and which scale profitably. You can't optimize what you can't see.",
+  },
+  {
+    section: 'Yield & ROI',
+    topic: 'Close Rate by Source',
+    saggy: "A lead from organic search and a lead from a third-party site close at completely different rates. If you're not measuring that, you're guessing on every budget call.",
+    q: "Do you track close rate by lead source?",
+    answers: [
+      { letter: 'A', text: "Yes. We close-loop every lead back to sales", pts: 4 },
+      { letter: 'B', text: "We track total close rate. Not by source",     pts: 2 },
+      { letter: 'C', text: "We eyeball it",                                pts: 1 },
+      { letter: 'D', text: "Not measured",                                 pts: 0 },
+    ],
+    fix: "Close-loop every lead back to its source in the CRM. Organic leads commonly close at 2–3× the rate of third-party leads. Without this number, you're allocating budget blind.",
+  },
+  {
+    section: 'Yield & ROI',
+    topic: 'Performance Cadence',
+    saggy: "Last one. The dealers who win this game look at the numbers more than they look at their phones.",
+    q: "How often does your team actually sit down and review digital performance against goals?",
+    answers: [
+      { letter: 'A', text: "Weekly or every two weeks",          pts: 4 },
+      { letter: 'B', text: "Monthly, like clockwork",            pts: 3 },
+      { letter: 'C', text: "Quarterly. Or when something breaks", pts: 1 },
+      { letter: 'D', text: "Almost never",                        pts: 0 },
+    ],
+    fix: "Lock in a 30-minute weekly digital review with sales + marketing. Numbers, blockers, next bets. The dealers who do this consistently outperform the ones who don't. Every time.",
+  },
+];
+
+const BANDS = [
+  { min: 90, name: 'Lunar Leader',  line: "Look at you. Boots planted, flag in the ground. You're already where most dealers are still trying to get to. Let's talk about how to keep the lead." },
+  { min: 75, name: 'Orbit Builder', line: "Solid orbit. The fundamentals are there. There are still leads slipping out the back door though. Want to see where?" },
+  { min: 60, name: 'Liftoff Stage', line: "You're showing up in regular search. You're invisible in AI search. That gap is costing you leads every single month, and it's only going to get bigger." },
+  { min: 40, name: 'Pre-Launch',    line: "Engines aren't fired up yet. Multiple pillars are leaking. The good news is every one of these is fixable, and I know exactly where to start." },
+  { min: 0,  name: 'Grounded',      line: "Tough number. But here's the thing. Your competitors aren't crushing it, you're just not in the game yet. Let's get you off the ground." },
+];
+
+const SCAN_STAGES = [
+  'Initializing crawler…',
+  'Mapping site architecture…',
+  'Indexing pages…',
+  'Auditing technical SEO…',
+  'Checking schema and structured data…',
+  'Testing snippet eligibility…',
+  'Querying LLM visibility…',
+  'Scoring generative search presence…',
+  'Compiling pillar breakdown…',
+  'Scan complete.',
+];
+
+// ============ STATE ============
+const state = {
+  url: '',
+  competitorUrl: '',
+  currentQ: 0,
+  answers: new Array(10).fill(null),
+  quizScore: 0,
+  algoScores: { seo: 0, aeo: 0, geo: 0, total: 0 },
+  competitorAlgoScores: null, // set only when a competitor URL was scanned
+  scanProgress: 0,
+  scanInterval: null,
+  audioEnabled: false,
+};
+
+// ============ HELPERS ============
+function $(id) { return document.getElementById(id); }
+function show(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(screenId).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateStepIndicator(screenId);
+}
+function updateStepIndicator(screenId) {
+  const map = {
+    'screen-landing':  '',
+    'screen-quiz':     `<span>Step</span><span class="dot">·</span><span>Quiz · ${state.currentQ + 1}/10</span>`,
+    'screen-leadcap':  '<span>Step</span><span class="dot">·</span><span>Score Ready</span>',
+    'screen-result':   '<span>Step</span><span class="dot">·</span><span>Your SAGGY Score</span>',
+  };
+  $('stepIndicator').innerHTML = map[screenId] || '';
+}
+
+// Deterministic-feeling random based on URL string — so same URL gives same algorithm score
+function urlSeed(url) {
+  let h = 0;
+  for (let i = 0; i < url.length; i++) {
+    h = ((h << 5) - h) + url.charCodeAt(i);
+    h |= 0;
+  }
+  return Math.abs(h);
+}
+function seededRand(seed, mod) {
+  const x = Math.sin(seed) * 10000;
+  return Math.floor((x - Math.floor(x)) * mod);
+}
+
+// Seeded fallback (used if PSI fails or times out)
+function computeAlgoScoresSeeded(url) {
+  const seed = urlSeed(url);
+  const seo = 8 + seededRand(seed + 1, 11);
+  const aeo = 4 + seededRand(seed + 2, 9);
+  const geo = 2 + seededRand(seed + 3, 9);
+  return { seo, aeo, geo, total: seo + aeo + geo, source: 'seeded' };
+}
+
+// Real audit via Google PageSpeed Insights (Lighthouse).
+// SEO  ← Lighthouse SEO category (broad ranking-signal hygiene)
+// AEO  ← (Accessibility + Best-Practices) / 2  (well-structured pages get cited by answer engines)
+// GEO  ← Specific on-page signals that determine AI-search citeability:
+//        meta description, title, crawlability, alt text, semantic links, canonical,
+//        structured data, heading order. Counted from Lighthouse audits, not categories.
+//        (For a true LLM-citation check, route through a backend that queries an LLM API.)
+const PSI_API_KEY = ''; // optional: paste a key from https://developers.google.com/speed/docs/insights/v5/get-started for higher quota
+// Paste your GoHighLevel inbound webhook URL here. Leave the placeholder to skip posting.
+const GHL_WEBHOOK_URL = 'PASTE_YOUR_GHL_WEBHOOK_URL_HERE';
+// Audits used to derive GEO. Each is 0 (fail) or 1 (pass); "manual" audits count as 0.5 if present.
+const GEO_AUDITS = [
+  'meta-description',
+  'document-title',
+  'is-crawlable',
+  'robots-txt',
+  'image-alt',
+  'link-text',
+  'crawlable-anchors',
+  'canonical',
+  'structured-data', // manual in Lighthouse — treated as half-credit when reported
+  'heading-order',   // from a11y category
+];
+async function fetchAlgoScoresPSI(url) {
+  const params = new URLSearchParams({ url, strategy: 'mobile' });
+  ['PERFORMANCE','SEO','ACCESSIBILITY','BEST_PRACTICES'].forEach(c => params.append('category', c));
+  if (PSI_API_KEY) params.set('key', PSI_API_KEY);
+  const endpoint = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?' + params.toString();
+
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 45000); // 45s hard cap
+  try {
+    const res = await fetch(endpoint, { signal: ctrl.signal });
+    if (!res.ok) throw new Error('PSI HTTP ' + res.status);
+    const data = await res.json();
+    const lh = data?.lighthouseResult || {};
+    const cats = lh.categories || {};
+    const audits = lh.audits || {};
+    const seo = cats.seo?.score ?? null;
+    const a11y = cats.accessibility?.score ?? null;
+    const bp = cats['best-practices']?.score ?? null;
+    if (seo === null || a11y === null || bp === null) {
+      throw new Error('PSI missing category scores');
+    }
+
+    // GEO: real AI-citation signals from audit-level data
+    let geoSum = 0;
+    let geoCount = 0;
+    const geoDetail = {};
+    for (const id of GEO_AUDITS) {
+      const audit = audits[id];
+      if (!audit) continue;
+      let v;
+      if (audit.score === null || audit.score === undefined) {
+        // manual / informative audit — half-credit when surfaced
+        v = audit.scoreDisplayMode === 'manual' ? 0.5 : null;
+      } else {
+        v = audit.score; // 0 or 1
+      }
+      if (v === null) continue;
+      geoSum += v;
+      geoCount++;
+      geoDetail[id] = v;
+    }
+    const geoRatio = geoCount > 0 ? (geoSum / geoCount) : 0;
+
+    const seoPts = Math.round(seo * 20);
+    const aeoPts = Math.round(((a11y + bp) / 2) * 20);
+    const geoPts = Math.round(geoRatio * 20);
+    return {
+      seo: seoPts, aeo: aeoPts, geo: geoPts,
+      total: seoPts + aeoPts + geoPts,
+      source: 'psi',
+      raw: { seo, accessibility: a11y, bestPractices: bp, geoDetail, geoRatio },
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// Wrapper with graceful fallback to seeded scores.
+async function computeAlgoScores(url) {
+  try {
+    return await fetchAlgoScoresPSI(url);
+  } catch (err) {
+    console.warn('PSI scan failed, using seeded scores:', err);
+    return computeAlgoScoresSeeded(url);
+  }
+}
+
+function bandFor(total) {
+  return BANDS.find(b => total >= b.min) || BANDS[BANDS.length - 1];
+}
+
+// ============ SPEECH BUBBLE (typewriter) ============
+let _bubbleTimer = null;
+let _bubbleFullText = '';
+function setBubbleText(text) {
+  const bubble = $('speechBubble');
+  if (!bubble) return;
+  // Cancel any in-progress typing
+  if (_bubbleTimer) { clearInterval(_bubbleTimer); _bubbleTimer = null; }
+  _bubbleFullText = text;
+
+  // Rebuild structure: text span + cursor + attribution line
+  bubble.classList.remove('done', 'entering');
+  bubble.innerHTML = '<span class="bubble-text"></span><span class="bubble-cursor"></span><span class="bubble-attribution">— Saggy</span>';
+
+  // Re-trigger entry animation (force reflow first)
+  void bubble.offsetWidth;
+  bubble.classList.add('entering');
+
+  const textEl = bubble.querySelector('.bubble-text');
+  const speed = 22; // ms/char — snappy but readable
+  let i = 0;
+  _bubbleTimer = setInterval(() => {
+    if (i >= text.length) {
+      clearInterval(_bubbleTimer);
+      _bubbleTimer = null;
+      bubble.classList.remove('entering');
+      bubble.classList.add('done');
+      return;
+    }
+    i += 2; // 2 chars/tick for nicer pace
+    if (i > text.length) i = text.length;
+    textEl.textContent = text.slice(0, i);
+  }, speed);
+}
+// Click the bubble to skip the typewriter
+document.addEventListener('click', (e) => {
+  const bubble = e.target.closest && e.target.closest('#speechBubble');
+  if (!bubble || !_bubbleTimer) return;
+  clearInterval(_bubbleTimer);
+  _bubbleTimer = null;
+  bubble.querySelector('.bubble-text').textContent = _bubbleFullText;
+  bubble.classList.remove('entering');
+  bubble.classList.add('done');
+});
+
+// ============ SAGGY VOICE-OVER (Web Speech API) ============
+// Free, no API keys. Quality is OS-dependent. To upgrade to premium voice
+// (e.g. ElevenLabs pre-renders), swap saggySpeak() with an <audio> player.
+const SAGGY_SUPPORTS_TTS = typeof window !== 'undefined' && 'speechSynthesis' in window;
+let _saggyVoice = null;
+function pickSaggyVoice() {
+  if (!SAGGY_SUPPORTS_TTS) return null;
+  if (_saggyVoice) return _saggyVoice;
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return null;
+  const enVoices = voices.filter(v => /en[-_]/i.test(v.lang));
+  // Ordered most-kid-like first. macOS "Junior" is a literal boy voice — download it via
+  // System Settings → Accessibility → Spoken Content → System Voice → Manage Voices.
+  // The rest are male voices that read younger once we lift pitch.
+  const preferred = ['Junior', 'Aaron', 'Reed', 'Ralph', 'Microsoft Guy', 'Google US English'];
+  const findByName = (name, qualityFilter) => enVoices.find(v =>
+    v.name.toLowerCase().includes(name.toLowerCase()) && (qualityFilter ? qualityFilter(v) : true)
+  );
+  // First pass: insist on a Premium/Enhanced variant of a preferred voice
+  for (const name of preferred) {
+    const v = findByName(name, x => /premium|enhanced/i.test(x.name));
+    if (v) { _saggyVoice = v; return v; }
+  }
+  // Second pass: any variant of a preferred voice
+  for (const name of preferred) {
+    const v = findByName(name);
+    if (v) { _saggyVoice = v; return v; }
+  }
+  // Third pass: any Premium/Enhanced English voice (smoother than compact defaults)
+  _saggyVoice = enVoices.find(v => /premium|enhanced/i.test(v.name))
+              || enVoices[0] || voices[0];
+  return _saggyVoice;
+}
+if (SAGGY_SUPPORTS_TTS) {
+  // Voices load asynchronously in some browsers
+  window.speechSynthesis.onvoiceschanged = () => { _saggyVoice = null; pickSaggyVoice(); };
+}
+let _saggyResumeTimer = null;
+function saggySpeak(text) {
+  if (!SAGGY_SUPPORTS_TTS || !state.audioEnabled || !text) return;
+  try {
+    window.speechSynthesis.cancel(); // stop any in-progress speech
+    if (_saggyResumeTimer) { clearInterval(_saggyResumeTimer); _saggyResumeTimer = null; }
+    const u = new SpeechSynthesisUtterance(text);
+    const v = pickSaggyVoice();
+    if (v) u.voice = v;
+    // If we actually got the macOS "Junior" kid voice, keep pitch close to natural —
+    // it already sounds like a boy. Otherwise push pitch up to force a younger sound.
+    const isKidVoice = v && /junior/i.test(v.name);
+    u.rate = isKidVoice ? 1.05 : 1.12;
+    u.pitch = isKidVoice ? 1.05 : 1.5;
+    u.volume = 1.0;
+    u.onend = () => { if (_saggyResumeTimer) { clearInterval(_saggyResumeTimer); _saggyResumeTimer = null; } };
+    u.onerror = u.onend;
+    // Tiny delay after cancel() avoids a race where speak() starts before the queue is clear
+    setTimeout(() => {
+      window.speechSynthesis.speak(u);
+      // Chrome pauses synthesis every ~15s on long utterances; nudge it to keep going smoothly.
+      _saggyResumeTimer = setInterval(() => {
+        if (!window.speechSynthesis.speaking) {
+          clearInterval(_saggyResumeTimer); _saggyResumeTimer = null; return;
+        }
+        window.speechSynthesis.pause();
+        window.speechSynthesis.resume();
+      }, 12000);
+    }, 60);
+  } catch (err) {
+    console.warn('TTS failed:', err);
+  }
+}
+function saggyStop() {
+  if (SAGGY_SUPPORTS_TTS) window.speechSynthesis.cancel();
+  if (_saggyResumeTimer) { clearInterval(_saggyResumeTimer); _saggyResumeTimer = null; }
+}
+function initAudioToggle() {
+  const btn = $('audioToggle');
+  if (!btn) return;
+  // Restore preference
+  try {
+    const saved = localStorage.getItem('saggyAudio');
+    if (saved === '1') {
+      state.audioEnabled = true;
+      btn.setAttribute('aria-pressed', 'true');
+    }
+  } catch {}
+  if (!SAGGY_SUPPORTS_TTS) {
+    btn.disabled = true;
+    btn.title = 'Voice-over not supported in this browser';
+    return;
+  }
+  btn.addEventListener('click', () => {
+    state.audioEnabled = !state.audioEnabled;
+    btn.setAttribute('aria-pressed', state.audioEnabled ? 'true' : 'false');
+    try { localStorage.setItem('saggyAudio', state.audioEnabled ? '1' : '0'); } catch {}
+    if (state.audioEnabled) {
+      // Speak the current question immediately so the user hears the toggle worked
+      const q = QUESTIONS[state.currentQ];
+      if (q) saggySpeak(q.saggy + ' ' + q.q);
+    } else {
+      saggyStop();
+    }
+  });
+}
+
+// ============ LANDING ============
+$('startBtn').addEventListener('click', startQuiz);
+$('urlInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') startQuiz(); });
+$('vsToggle').addEventListener('click', () => {
+  const wrap = $('vsInputWrap');
+  const btn = $('vsToggle');
+  const open = wrap.hasAttribute('hidden');
+  if (open) {
+    wrap.removeAttribute('hidden');
+    btn.setAttribute('aria-expanded', 'true');
+    $('competitorInput').focus();
+  } else {
+    wrap.setAttribute('hidden', '');
+    btn.setAttribute('aria-expanded', 'false');
+    $('competitorInput').value = '';
+  }
+});
+
+function normalizeUrl(raw) {
+  let url = raw.trim();
+  if (!url) return null;
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+  try { new URL(url); return url; } catch { return false; }
+}
+
+// Hosts that obviously aren't dealership websites — caught instantly with no network call.
+const NON_DEALER_HOSTS = new Set([
+  // social
+  'facebook.com','fb.com','instagram.com','twitter.com','x.com','tiktok.com',
+  'linkedin.com','youtube.com','snapchat.com','pinterest.com','reddit.com','threads.net',
+  // email
+  'gmail.com','yahoo.com','outlook.com','hotmail.com','aol.com','icloud.com','protonmail.com',
+  // search / tech
+  'google.com','bing.com','duckduckgo.com','github.com','gitlab.com','stackoverflow.com','wikipedia.org',
+  // commerce (not dealerships)
+  'amazon.com','ebay.com','etsy.com','walmart.com','target.com','shopify.com','apple.com','microsoft.com',
+  // misc
+  'craigslist.org','autotrader.com','cars.com','carvana.com','carmax.com','cargurus.com','truecar.com','kbb.com','edmunds.com',
+]);
+// Keywords that almost always show up on a real car dealership homepage.
+const DEALER_KEYWORDS = [
+  'dealership','dealer','inventory','pre-owned','used car','used cars','test drive',
+  'service department','showroom','carfax','certified pre-owned','schedule service',
+  'auto group','auto sales','motors','new vehicles','finance application','trade-in',
+  // brands
+  'toyota','honda','ford','chevrolet','chevy','ram','dodge','jeep','chrysler','gmc',
+  'buick','cadillac','lincoln','mazda','hyundai','kia','subaru','volkswagen','audi',
+  'bmw','mercedes','lexus','infiniti','acura','nissan','mitsubishi','volvo','porsche',
+  'jaguar','land rover','range rover','tesla','rivian','lucid',
+];
+
+function checkObviousNonDealer(url) {
+  let host;
+  try { host = new URL(url).hostname.toLowerCase().replace(/^www\./, ''); }
+  catch { return null; }
+  if (host === 'localhost' || /^127\./.test(host) || /^192\.168\./.test(host) || /^10\./.test(host)) {
+    return "That's a local network address, not a dealership site.";
+  }
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(host)) return "That's an IP address. Use the dealership's actual domain.";
+  if (/\.(local|test|localhost)$/.test(host)) return "That's a local test domain, not a real site.";
+  for (const denied of NON_DEALER_HOSTS) {
+    if (host === denied || host.endsWith('.' + denied)) {
+      return `${denied} isn't a car dealership. Drop in your actual dealership URL.`;
+    }
+  }
+  return null;
+}
+
+// Fetch the page through a CORS-friendly reader and look for dealer signals.
+// Falls back to "ok" if the reader itself is unreachable — don't punish users for our infra hiccups.
+async function looksLikeDealer(url) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 15000); // 15s cap
+  try {
+    const res = await fetch('https://r.jina.ai/' + url, {
+      signal: ctrl.signal,
+      headers: { 'X-Return-Format': 'text' },
+    });
+    if (!res.ok) {
+      if (res.status >= 500) return { ok: true, reason: 'reader_down' }; // be lenient on our side
+      return { ok: false, reason: 'unreachable' };
+    }
+    const text = (await res.text()).toLowerCase();
+    if (!text || text.length < 200) return { ok: false, reason: 'empty' };
+    let hits = 0;
+    const hitList = [];
+    for (const kw of DEALER_KEYWORDS) {
+      if (text.includes(kw)) {
+        hits++;
+        hitList.push(kw);
+        if (hits >= 3) break;
+      }
+    }
+    if (hits >= 3) return { ok: true, hits, hitList };
+    return { ok: false, reason: 'no_dealer_signals', hits };
+  } catch (err) {
+    // Network/timeout error — don't block the user
+    console.warn('Dealer-check fetch failed, allowing through:', err);
+    return { ok: true, reason: 'check_failed' };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function startQuiz() {
+  const url = normalizeUrl($('urlInput').value);
+  if (url === null) {
+    $('urlError').textContent = 'Drop in your dealership URL to get started.';
+    return;
+  }
+  if (url === false) {
+    $('urlError').textContent = "That doesn't look like a valid URL. Try again.";
+    return;
+  }
+  // Competitor URL is optional. Validate only if the field has content.
+  const competitorRaw = $('competitorInput') ? $('competitorInput').value.trim() : '';
+  let competitor = '';
+  if (competitorRaw) {
+    const parsed = normalizeUrl(competitorRaw);
+    if (parsed === false) {
+      $('urlError').textContent = "That competitor URL doesn't look valid. Fix it or clear the field.";
+      return;
+    }
+    competitor = parsed;
+  }
+
+  // Instant denylist check — catches gmail.com, facebook.com, etc. with no network call.
+  const obviousReject = checkObviousNonDealer(url);
+  if (obviousReject) { $('urlError').textContent = obviousReject; return; }
+  if (competitor) {
+    const compObvious = checkObviousNonDealer(competitor);
+    if (compObvious) { $('urlError').textContent = `Competitor: ${compObvious}`; return; }
+  }
+
+  // Network check — fetch the page and confirm dealership keywords are present.
+  $('urlError').textContent = '';
+  const btn = $('startBtn');
+  const origLabel = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Verifying dealership site…';
+  let dealerCheck, compCheck;
+  try {
+    if (competitor) {
+      [dealerCheck, compCheck] = await Promise.all([looksLikeDealer(url), looksLikeDealer(competitor)]);
+    } else {
+      dealerCheck = await looksLikeDealer(url);
+    }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = origLabel;
+  }
+  if (!dealerCheck.ok) {
+    $('urlError').textContent = dealerCheck.reason === 'unreachable' || dealerCheck.reason === 'empty'
+      ? "Couldn't reach that site. Double-check the URL."
+      : "That doesn't look like a car dealership website. Drop in your actual dealership URL.";
+    return;
+  }
+  if (compCheck && !compCheck.ok) {
+    $('urlError').textContent = compCheck.reason === 'unreachable' || compCheck.reason === 'empty'
+      ? "Couldn't reach the competitor site. Check the URL or clear the field."
+      : "Competitor URL doesn't look like a car dealership site. Fix it or clear the field.";
+    return;
+  }
+
+  // Passed all checks — proceed.
+  state.url = url;
+  state.competitorUrl = competitor;
+  // Kick off the real PSI audit(s) in parallel — they run while the user is on the quiz.
+  state.algoPromise = computeAlgoScores(url);
+  state.competitorAlgoPromise = competitor ? computeAlgoScores(competitor) : null;
+  show('screen-quiz');
+  renderQuestion();
+  startScan();
+}
+
+// ============ QUIZ ============
+function renderQuestion() {
+  // Trigger Saggy reaction animation
+  const saggy = document.getElementById('saggyImg');
+  if (saggy) {
+    saggy.classList.remove('react');
+    void saggy.offsetWidth; // reflow to restart animation
+    saggy.classList.add('react');
+  }
+
+  const q = QUESTIONS[state.currentQ];
+  $('qNum').textContent = state.currentQ + 1;
+  $('qSection').textContent = q.section;
+  $('qText').textContent = q.q;
+  setBubbleText(q.saggy);
+
+  const wrap = $('answersWrap');
+  wrap.innerHTML = '';
+  q.answers.forEach((a, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.innerHTML = `<span class="answer-letter">${a.letter}</span><span>${a.text}</span>`;
+    btn.addEventListener('click', () => selectAnswer(idx, btn));
+    wrap.appendChild(btn);
+  });
+  updateStepIndicator('screen-quiz');
+  saggySpeak(q.saggy + ' ' + q.q);
+}
+
+function selectAnswer(idx, btn) {
+  // Visual selection
+  document.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state.answers[state.currentQ] = QUESTIONS[state.currentQ].answers[idx];
+
+  // Move forward after a beat
+  setTimeout(() => {
+    if (state.currentQ < QUESTIONS.length - 1) {
+      state.currentQ++;
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  }, 350);
+}
+
+function finishQuiz() {
+  state.quizScore = state.answers.reduce((sum, a) => sum + (a ? a.pts : 0), 0);
+  // Force-finish the scan if it's still running so lead capture is clean
+  forceCompleteScan();
+  setTimeout(() => show('screen-leadcap'), 400);
+}
+
+// ============ ALGORITHM SCAN ============
+function startScan() {
+  state.scanProgress = 0;
+  let stageIdx = 0;
+  const totalDurationMs = 75000; // ~75s — quiz might finish first which is fine
+  const tickMs = 250;
+  const stepsPerStage = Math.floor((totalDurationMs / tickMs) / SCAN_STAGES.length);
+  let ticks = 0;
+
+  $('scanTracker').classList.remove('complete');
+  $('scanStatus').textContent = SCAN_STAGES[0];
+
+  state.scanInterval = setInterval(() => {
+    ticks++;
+    // Non-linear: slow at start, faster in middle, slower at end
+    const t = ticks / (totalDurationMs / tickMs);
+    const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    state.scanProgress = Math.min(99, Math.floor(eased * 100));
+
+    const newStage = Math.min(SCAN_STAGES.length - 2, Math.floor(ticks / stepsPerStage));
+    if (newStage !== stageIdx) {
+      stageIdx = newStage;
+      $('scanStatus').textContent = SCAN_STAGES[stageIdx];
+    }
+    $('scanPct').textContent = state.scanProgress + '%';
+    $('scanFill').style.width = state.scanProgress + '%';
+
+    if (state.scanProgress >= 99) {
+      forceCompleteScan();
+    }
+  }, tickMs);
+}
+
+function forceCompleteScan() {
+  if (state.scanInterval) {
+    clearInterval(state.scanInterval);
+    state.scanInterval = null;
+  }
+  state.scanProgress = 100;
+  $('scanPct').textContent = '100%';
+  $('scanFill').style.width = '100%';
+  $('scanStatus').textContent = SCAN_STAGES[SCAN_STAGES.length - 1];
+  $('scanTracker').classList.add('complete');
+}
+
+// ============ LEAD CAPTURE ============
+$('leadForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  // Honeypot: humans never see this field. Anything in it = bot.
+  // Legit users still get their score; we just skip the CRM POST.
+  const botSuspected = !!($('leadHoneypot') && $('leadHoneypot').value.trim());
+  if (botSuspected) console.warn('Honeypot tripped — skipping GHL POST.');
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const origLabel = submitBtn ? submitBtn.textContent : null;
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Scoring your site…'; }
+  try {
+    state.algoScores = await state.algoPromise;
+  } catch {
+    state.algoScores = computeAlgoScoresSeeded(state.url);
+  }
+  if (state.competitorAlgoPromise) {
+    try {
+      state.competitorAlgoScores = await state.competitorAlgoPromise;
+    } catch {
+      state.competitorAlgoScores = computeAlgoScoresSeeded(state.competitorUrl);
+    }
+  }
+  if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = origLabel; }
+  const topGaps = state.answers
+    .map((a, i) => ({ i, pts: a ? a.pts : 0, max: Math.max(...QUESTIONS[i].answers.map(x => x.pts)) }))
+    .filter(x => x.pts < x.max)
+    .sort((a, b) => a.pts - b.pts || a.i - b.i)
+    .slice(0, 3)
+    .map(({ i }) => ({
+      topic: QUESTIONS[i].topic,
+      question: QUESTIONS[i].q,
+      answered: state.answers[i] ? state.answers[i].text : null,
+      fix: QUESTIONS[i].fix,
+    }));
+
+  const totalScore = state.quizScore + state.algoScores.total;
+  const band = bandFor(totalScore);
+
+  // Pre-render the SMS body so the GHL workflow just maps {{saggyMessage}}
+  // into a Send-SMS step. No copywriting needed in GHL.
+  const dealerFirst = ($('leadName').value.trim().split(/\s+/)[0]) || 'there';
+  const topGapTopic = topGaps[0] ? topGaps[0].topic : 'visibility';
+  const saggyMessage =
+    `Hey ${dealerFirst} — Saggy here. Just saw your ${totalScore}/100 SAGGY score (${band.name}). ` +
+    `The ${topGapTopic} gap is what I'd hit first this week. Reply CALL and I'll loop you in with the team. — A3 Brands`;
+
+  const payload = {
+    name: $('leadName').value.trim(),
+    dealership: $('leadDealer').value.trim(),
+    email: $('leadEmail').value.trim(),
+    phone: $('leadPhone').value.trim(),
+    url: state.url,
+    competitorUrl: state.competitorUrl || null,
+    quizScore: state.quizScore,
+    algoScore: state.algoScores.total,
+    seoScore: state.algoScores.seo,
+    aeoScore: state.algoScores.aeo,
+    geoScore: state.algoScores.geo,
+    competitorAlgoScore: state.competitorAlgoScores ? state.competitorAlgoScores.total : null,
+    competitorSeoScore: state.competitorAlgoScores ? state.competitorAlgoScores.seo : null,
+    competitorAeoScore: state.competitorAlgoScores ? state.competitorAlgoScores.aeo : null,
+    competitorGeoScore: state.competitorAlgoScores ? state.competitorAlgoScores.geo : null,
+    totalScore,
+    band: band.name,
+    topGaps,
+    saggyMessage,
+    answers: state.answers.map((a, i) => ({
+      question: QUESTIONS[i].q,
+      answer: a ? a.text : null,
+      points: a ? a.pts : 0,
+    })),
+    timestamp: new Date().toISOString(),
+  };
+  console.log('SAGGY Score Lead Payload →', payload);
+
+  // Fire-and-forget POST to GHL webhook. Errors don't block the reveal.
+  // Bot submissions (honeypot tripped) skip the CRM but still see the score.
+  if (!botSuspected && GHL_WEBHOOK_URL && !/PASTE_YOUR/i.test(GHL_WEBHOOK_URL)) {
+    fetch(GHL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      mode: 'cors',
+      keepalive: true,
+    }).catch(err => console.warn('GHL webhook failed:', err));
+  }
+
+  renderResult();
+  show('screen-result');
+});
+
+// ============ RESULT ============
+function renderResult() {
+  const algo = state.algoScores;
+  const quiz = state.quizScore;
+  const total = algo.total + quiz;
+  const band = bandFor(total);
+
+  $('bandName').textContent = band.name;
+  $('revealLine').textContent = band.line;
+  saggySpeak(`Your SAGGY score is ${total} out of 100. ${band.name}. ${band.line}`);
+
+  // Animated counters
+  animateCount('algoVal', 0, algo.total, 1100);
+  animateCount('quizVal', 0, quiz, 1100);
+  animateCount('totalVal', 0, total, 1400);
+  animateCount('seoVal', 0, algo.seo, 1300);
+  animateCount('aeoVal', 0, algo.aeo, 1300);
+  animateCount('geoVal', 0, algo.geo, 1300);
+
+  // Animated bars (next frame so transition fires)
+  requestAnimationFrame(() => {
+    $('algoBarFill').style.width = (algo.total / 60 * 100) + '%';
+    $('quizBarFill').style.width = (quiz / 40 * 100) + '%';
+    $('totalBarFill').style.width = (total / 100 * 100) + '%';
+    $('seoFill').style.width = (algo.seo / 20 * 100) + '%';
+    $('aeoFill').style.width = (algo.aeo / 20 * 100) + '%';
+    $('geoFill').style.width = (algo.geo / 20 * 100) + '%';
+  });
+
+  renderFixes();
+  renderCompetitor();
+}
+
+// Reveal competitor bars + a short verdict line if the user scanned a competitor.
+function renderCompetitor() {
+  const vs = state.competitorAlgoScores;
+  const showIds = ['vsLegend', 'seoVsBarWrap', 'aeoVsBarWrap', 'geoVsBarWrap', 'seoVsScore', 'aeoVsScore', 'geoVsScore', 'vsSummary'];
+  if (!vs) {
+    showIds.forEach(id => { const el = $(id); if (el) el.setAttribute('hidden', ''); });
+    return;
+  }
+  showIds.forEach(id => { const el = $(id); if (el) el.removeAttribute('hidden'); });
+
+  // Friendly competitor host label (strip protocol + trailing slash)
+  let host = state.competitorUrl;
+  try { host = new URL(state.competitorUrl).hostname.replace(/^www\./, ''); } catch {}
+  $('vsLegendHost').textContent = host;
+
+  $('seoVsVal').textContent = vs.seo;
+  $('aeoVsVal').textContent = vs.aeo;
+  $('geoVsVal').textContent = vs.geo;
+
+  requestAnimationFrame(() => {
+    $('seoVsFill').style.width = (vs.seo / 20 * 100) + '%';
+    $('aeoVsFill').style.width = (vs.aeo / 20 * 100) + '%';
+    $('geoVsFill').style.width = (vs.geo / 20 * 100) + '%';
+  });
+
+  // One-sentence verdict in Saggy's voice
+  const you = state.algoScores;
+  const diff = you.total - vs.total;
+  let verdict;
+  if (diff >= 8)      verdict = `You're <b>${diff} points ahead</b> of ${host} on the algorithm side. Good. Now lock the lead before they catch up.`;
+  else if (diff >= 1) verdict = `You're <b>${diff} points up</b> on ${host}. Closer than you'd like, especially in the pillar where they beat you. Let's widen the gap.`;
+  else if (diff === 0) verdict = `Dead even with ${host} on the algorithm side. Whoever moves first this quarter wins the trade area.`;
+  else                verdict = `${host} is beating you by <b>${Math.abs(diff)} points</b> on the algorithm side. That's leads walking down the road every month. Let's flip it.`;
+  $('vsSummary').innerHTML = verdict;
+}
+
+// Pick the 3 weakest answers (lowest points; ties → earlier question first) and surface
+// the question's specific fix copy. Skips questions answered at max points.
+function renderFixes() {
+  const ranked = state.answers
+    .map((a, i) => ({ i, pts: a ? a.pts : 0, max: Math.max(...QUESTIONS[i].answers.map(x => x.pts)) }))
+    .filter(x => x.pts < x.max) // only show actual gaps
+    .sort((a, b) => a.pts - b.pts || a.i - b.i)
+    .slice(0, 3);
+
+  const list = $('fixesList');
+  list.innerHTML = '';
+
+  if (ranked.length === 0) {
+    $('fixesTitle').textContent = "You're firing on all cylinders.";
+    const li = document.createElement('li');
+    li.className = 'fix-item';
+    li.innerHTML = `<div><div class="fix-topic">No Gaps Found</div><div class="fix-body">Every answer was a top score. That's rare. Let's talk about how to widen the lead before competitors close it.</div></div>`;
+    list.appendChild(li);
+    return;
+  }
+
+  $('fixesTitle').textContent = ranked.length === 1
+    ? 'Your Top Gap'
+    : `Your Top ${ranked.length} Gaps`;
+
+  ranked.forEach(({ i }) => {
+    const q = QUESTIONS[i];
+    const answered = state.answers[i];
+    const li = document.createElement('li');
+    li.className = 'fix-item';
+    li.innerHTML = `
+      <div>
+        <div class="fix-topic">${q.topic || q.section}</div>
+        ${answered ? `<div class="fix-said">You said: <b>"${answered.text}"</b></div>` : ''}
+        <div class="fix-body">${q.fix}</div>
+      </div>
+    `;
+    list.appendChild(li);
+  });
+}
+
+function animateCount(elId, from, to, durationMs) {
+  const el = $(elId);
+  const startTime = performance.now();
+  function frame(now) {
+    const elapsed = now - startTime;
+    const t = Math.min(1, elapsed / durationMs);
+    const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
+    el.textContent = Math.round(from + (to - from) * eased);
+    if (t < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+$('ctaBook').addEventListener('click', () => {
+  // TODO: hook to actual calendar — Calendly, GHL, etc.
+  window.open('https://a3brands.com/galaxy/book-call', '_blank');
+});
+$('ctaEmail').addEventListener('click', () => {
+  const algo = state.algoScores;
+  const quiz = state.quizScore;
+  const total = algo.total + quiz;
+  const band = bandFor(total);
+  const name = $('leadName').value.trim() || 'there';
+  const dealer = $('leadDealer').value.trim() || '';
+  const leadEmail = $('leadEmail').value.trim();
+
+  const subject = `Your SAGGY Score: ${total}/100 — ${band.name}`;
+  const lines = [
+    `Hi ${name},`,
+    ``,
+    `Here is your SAGGY Score breakdown${dealer ? ' for ' + dealer : ''}.`,
+    `Site analyzed: ${state.url || '(not provided)'}`,
+    ``,
+    `═══════════════════════`,
+    `TOTAL: ${total} / 100  —  ${band.name}`,
+    `${band.line}`,
+    `═══════════════════════`,
+    ``,
+    `Algorithmic score: ${algo.total} / 60`,
+    `  • SEO:  ${algo.seo} / 20`,
+    `  • AEO:  ${algo.aeo} / 20`,
+    `  • GEO:  ${algo.geo} / 20`,
+    `Quiz score:        ${quiz} / 40`,
+    ``,
+  ];
+
+  // Top-3 fixes (computed the same way the result page does)
+  const topGaps = state.answers
+    .map((a, i) => ({ i, pts: a ? a.pts : 0, max: Math.max(...QUESTIONS[i].answers.map(x => x.pts)) }))
+    .filter(x => x.pts < x.max)
+    .sort((a, b) => a.pts - b.pts || a.i - b.i)
+    .slice(0, 3);
+
+  if (topGaps.length > 0) {
+    lines.push(`What I'd fix first:`);
+    topGaps.forEach(({ i }, idx) => {
+      const q = QUESTIONS[i];
+      const a = state.answers[i];
+      lines.push(`  ${idx + 1}. ${q.topic}`);
+      if (a) lines.push(`     You said: "${a.text}"`);
+      lines.push(`     Fix: ${q.fix}`);
+      lines.push(``);
+    });
+  }
+
+  lines.push(
+    `Your answers:`,
+    ...state.answers.map((a, i) =>
+      `  Q${i + 1}. ${QUESTIONS[i].q}\n      → ${a ? a.text : '(skipped)'}${a ? ' [' + a.pts + ' pts]' : ''}`
+    ),
+    ``,
+    `Want to fix the gaps? Book a call: https://a3brands.com/galaxy/book-call`,
+    ``,
+    `— A3 Brands · GALAXY Visibility Diagnostic`,
+  );
+  const body = lines.join('\n');
+
+  const href = `mailto:${encodeURIComponent(leadEmail)}` +
+               `?subject=${encodeURIComponent(subject)}` +
+               `&body=${encodeURIComponent(body)}`;
+  window.location.href = href;
+});
+
+// Init
+updateStepIndicator('screen-landing');
+initAudioToggle();
+// Stop any in-progress voice when the page is hidden or navigated away
+document.addEventListener('visibilitychange', () => { if (document.hidden) saggyStop(); });
+window.addEventListener('beforeunload', saggyStop);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Large source media (kept locally, not in repo)
+mascot try.mov
+
+# Editor
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
