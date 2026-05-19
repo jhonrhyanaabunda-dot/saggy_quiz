@@ -7,6 +7,9 @@ mascot try.mov
 # Editor
 .vscode/
 
+# Local config with API keys — never commit
+config.local.js
+
 # Python
 __pycache__/
 *.pyc
